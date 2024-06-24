@@ -100,8 +100,7 @@ public class WaveManager : MonoBehaviour
 
        if (randomValue <= spawnData.bulletSpawnChance)
        {
-           //SpawnBullet();
-           StartCoroutine(SpawnCrash());
+           SpawnBullet();
        }
        else if (randomValue <= spawnData.bulletSpawnChance + spawnData.crashSpawnChance)
        {
@@ -109,8 +108,7 @@ public class WaveManager : MonoBehaviour
        }
        else if (randomValue <= spawnData.bulletSpawnChance + spawnData.crashSpawnChance + spawnData.dashSpawnChance)
        {
-           //SpawnDash();
-           StartCoroutine(SpawnCrash());
+           SpawnDash();
        }
    }
 

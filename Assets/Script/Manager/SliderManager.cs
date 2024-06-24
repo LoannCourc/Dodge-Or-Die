@@ -24,6 +24,7 @@ public class SliderManager : MonoBehaviour
         gameManager.StartGame();
         Time.timeScale = 1f;
         AudioManager.Instance.StopSound("IntroMusic");
+        AudioManager.Instance.PlaySound("MainMusic");
     }
 
     private void OnSliderValueChanged(float value)

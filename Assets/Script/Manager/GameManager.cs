@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     private int currentGridSize;
     private int currentScore;
     private Vector3 centerPos;
+    private bool _gameStarted;
     private static GameManager instance; // Instance statique du ScoreManager
 
     public static GameManager Instance
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
         spawnManager.InitializeSpawnPoints(currentGridSize, tileSpacing);
         
         // Déplacer le joueur au centre d'une tuile si la grille est de taille 4x4
-        if (currentGridSize == 4)
+        if (currentGridSize == 4 && _gameStarted)
         {
             int randomPos = Random.Range(0, 4);
             switch (randomPos)
@@ -93,6 +94,7 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
+        _gameStarted = true;
         player.SetActive(true);
         NewScore(1);
     }

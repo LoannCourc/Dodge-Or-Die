@@ -42,6 +42,7 @@ public class PlayerHealth : MonoBehaviour
     }
     private void Die()
     {
+        AudioManager.Instance.StopSound("MainMusic");
         // Logique de mort du joueur
         deathPanel.SetActive(true);
         Time.timeScale = 0f;

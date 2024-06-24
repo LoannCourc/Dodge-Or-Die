@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4305,7 +4304,7 @@ PrefabInstance:
       objectReference: {fileID: 3044794138289510921, guid: dd8037acc07638c4896e1354c08c20d6, type: 3}
     - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
       propertyPath: sounds.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
       propertyPath: sounds.Array.data[0].clip
@@ -4320,11 +4319,31 @@ PrefabInstance:
       value: IntroMusic
       objectReference: {fileID: 0}
     - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
+      propertyPath: sounds.Array.data[1].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: a0a4c0ee61b0f654081321fc116105b5, type: 3}
+    - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
+      propertyPath: sounds.Array.data[1].loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
+      propertyPath: sounds.Array.data[1].name
+      value: MainMusic
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
       propertyPath: sounds.Array.data[0].pitch
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
+      propertyPath: sounds.Array.data[1].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
       propertyPath: sounds.Array.data[0].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5240900230226427452, guid: 096f36e4565fe5a44a64f7f3a227c852, type: 3}
+      propertyPath: sounds.Array.data[1].volume
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
