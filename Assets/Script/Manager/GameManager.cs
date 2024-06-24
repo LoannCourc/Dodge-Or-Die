@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,9 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     private int currentGridSize;
     private int currentScore;
-    
-    public bool isGameStarted = false;
-
+    private Vector3 centerPos;
     private static GameManager instance; // Instance statique du ScoreManager
 
     public static GameManager Instance
@@ -53,6 +52,32 @@ public class GameManager : MonoBehaviour
         float tileSpacing = gridManager.GetTileSpacing();
         arrowManager.InitializeArrows(currentGridSize, tileSpacing);
         spawnManager.InitializeSpawnPoints(currentGridSize, tileSpacing);
+        
+        // Déplacer le joueur au centre d'une tuile si la grille est de taille 4x4
+        if (currentGridSize == 4)
+        {
+            int randomPos = Random.Range(0, 4);
+            switch (randomPos)
+            {
+                case 0 : 
+                    centerPos = new Vector3(tileSpacing/2f, tileSpacing/2f, tileSpacing/2f);
+                    break;
+                case 1 : 
+                    centerPos = new Vector3(-tileSpacing/2f, tileSpacing/2f, tileSpacing/2f);
+                    break;
+                case 2 : 
+                    centerPos = new Vector3(-tileSpacing/2f, -tileSpacing/2f, tileSpacing/2f);
+                    break;
+                case 3 : 
+                    centerPos = new Vector3(tileSpacing/2f, -tileSpacing/2f, tileSpacing/2f);
+                    break;
+            }
+
+            Vector3 centerPosition = centerPos;
+            
+            // Déplacer le joueur à la position centrale
+            player.transform.position = centerPosition;
+        }
     }
 
     public void NewScore(int score)
@@ -63,17 +88,7 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
-        isGameStarted = true;
         player.SetActive(true);
         NewScore(1);
-        if (waveManager != null)
-        {
-            //InvokeRepeating("SpawnBullet",1f,5f);
-        }
-    }
-
-    void SpawnBullet()
-    {
-        waveManager.SpawnDash();
     }
 }
