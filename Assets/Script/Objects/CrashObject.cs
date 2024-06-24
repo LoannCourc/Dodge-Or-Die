@@ -23,6 +23,18 @@ public class CrashObject : MonoBehaviour
     {
         speed = newSpeed;
     }
+    
+    public void CenterOnTile(float tileSpacing)
+    {
+        Vector3 position = transform.position;
+        float offset = (GameManager.Instance.gridManager.GetGridSize() % 2 == 0) ? tileSpacing / 2f : 0f;
+        float centeredX = Mathf.Round((position.x - offset) / tileSpacing) * tileSpacing + offset;
+        float centeredY = position.y;  // Assume no vertical adjustment needed
+        float centeredZ = Mathf.Round((position.z - offset) / tileSpacing) * tileSpacing + offset;
+        transform.position = new Vector3(centeredX, centeredY, centeredZ);
+    }
+
+    
     // Méthode appelée lors d'une collision avec le joueur
     private void OnTriggerEnter(Collider other)
     {

@@ -15,7 +15,7 @@ public class SliderManager : MonoBehaviour
     {
         gridSizeSlider.onValueChanged.AddListener(OnSliderValueChanged);
         OnSliderValueChanged(gridSizeSlider.value);
-        Time.timeScale = 0f;
+       
     }
     
     public void DisableSliderPanel()
@@ -23,6 +23,7 @@ public class SliderManager : MonoBehaviour
         sliderPanel.SetActive(false);
         gameManager.StartGame();
         Time.timeScale = 1f;
+        AudioManager.Instance.StopSound("IntroMusic");
     }
 
     private void OnSliderValueChanged(float value)

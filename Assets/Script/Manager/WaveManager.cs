@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class WaveManager : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class WaveManager : MonoBehaviour
     public CSVReader csvReader;
     private int gridSize;
     private int currentScore = 0;
-    private bool isSpawning = false;
     private float currentCooldown = 0f;
     private float cooldownDuration = 0f;
     
@@ -100,7 +100,8 @@ public class WaveManager : MonoBehaviour
 
        if (randomValue <= spawnData.bulletSpawnChance)
        {
-           SpawnBullet();
+           //SpawnBullet();
+           StartCoroutine(SpawnCrash());
        }
        else if (randomValue <= spawnData.bulletSpawnChance + spawnData.crashSpawnChance)
        {
@@ -108,7 +109,8 @@ public class WaveManager : MonoBehaviour
        }
        else if (randomValue <= spawnData.bulletSpawnChance + spawnData.crashSpawnChance + spawnData.dashSpawnChance)
        {
-           SpawnDash();
+           //SpawnDash();
+           StartCoroutine(SpawnCrash());
        }
    }
 
@@ -130,9 +132,34 @@ public class WaveManager : MonoBehaviour
     {
         SpawnData spawnData = csvReader.GetSpawnData(currentScore, gridSize);
         GameObject indicator = Instantiate(spawnIndicator, player.transform.position, Quaternion.identity);
-        float spawnInterval = spawnData.crashSpeed;
-        yield return new WaitForSeconds(spawnInterval);
+
+        // Récupère la position actuelle de l'objet
+        Vector3 position = indicator.transform.position;
+
+        // Calcule la position centrée sur une tuile la plus proche
+        float tileSpacing = gridManager.GetTileSpacing();
+        float offset = (gridSize % 2 == 0) ? tileSpacing / 2f : 0f;  // Ajustement pour les grilles de taille paire
+        float centeredX = Mathf.Round((position.x - offset) / tileSpacing) * tileSpacing + offset;
+        float centeredY = position.y;  // Assume no vertical adjustment needed
+        float centeredZ = Mathf.Round((position.z - offset) / tileSpacing) * tileSpacing + offset;
+
+        // Met à jour la position de l'objet
+        indicator.transform.position = new Vector3(centeredX, centeredY, centeredZ);
+
+        // Animation d'agrandissement et de rétrécissement avec DOTween
+        float animationDuration = spawnData.crashSpeed / 3f;
+        Sequence indicatorSequence = DOTween.Sequence();
+        indicatorSequence.Append(indicator.transform.DOScale(indicator.transform.localScale * 1.5f, animationDuration).SetEase(Ease.InOutQuad));
+        indicatorSequence.Append(indicator.transform.DOScale(indicator.transform.localScale, animationDuration).SetEase(Ease.InOutQuad));
+
+        yield return indicatorSequence.WaitForCompletion();
+
+        // Instanciation de l'objet de crash
         GameObject crashObject = Instantiate(crashPrefab, indicator.transform.position, Quaternion.identity);
+
+        // Centre le CrashObject sur une tuile
+        crashObject.GetComponent<CrashObject>().CenterOnTile(tileSpacing);
+
         crashObject.GetComponent<CrashObject>().SetSpeed(spawnData.crashSpeed);
         Destroy(indicator);
     }

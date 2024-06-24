@@ -41,74 +41,7 @@ public class GridManager : MonoBehaviour
     {
         return tileSpacing;
     }
-
-    public GameObject[] GetGroundTiles()
-    {
-        if (groundTiles == null)
-        {
-            Debug.LogError("Grid has not been initialized.");
-            return new GameObject[0];
-        }
-
-        // Convertir le tableau 2D en un tableau 1D pour les tiles du sol
-        GameObject[] tiles = new GameObject[gridSize * gridSize];
-        int index = 0;
-
-        for (int x = 0; x < gridSize; x++)
-        {
-            for (int y = 0; y < gridSize; y++)
-            {
-                tiles[index] = groundTiles[x, y];
-                index++;
-            }
-        }
-
-        return tiles;
-    }
-
-    public Vector3 GetRandomFreeTilePosition()
-    {
-        List<Vector3> freeTilePositions = GetFreeTilePositions();
-
-        if (freeTilePositions == null || freeTilePositions.Count == 0)
-        {
-            Debug.LogWarning("No free tiles available.");
-            return Vector3.zero; // Ou une autre position par défaut
-        }
-
-        int randomIndex = Random.Range(0, freeTilePositions.Count);
-        return freeTilePositions[randomIndex];
-    }
-
-    List<Vector3> GetFreeTilePositions()
-    {
-        List<Vector3> freePositions = new List<Vector3>();
-
-        // Parcourir les positions potentielles dans la grille
-        for (int x = 0; x < gridSize; x++)
-        {
-            for (int y = 0; y < gridSize; y++)
-            {
-                Vector3 position = groundTiles[x, y].transform.position;
-
-                // Vérifier si la position n'est pas déjà occupée
-                if (!IsPositionOccupied(position))
-                {
-                    freePositions.Add(position);
-                }
-            }
-        }
-
-        return freePositions;
-    }
-
-    bool IsPositionOccupied(Vector3 position)
-    {
-        // Vérifie si la position est occupée par un objet ou non
-        // Vous devez implémenter cette méthode selon la logique de votre jeu
-        // Cela pourrait impliquer de vérifier les collisions avec d'autres objets, etc.
-        return false; // Exemple simple : toujours considérer comme non occupée
-    }
+    
     private void ClearGrid()
     {
         if (groundTiles != null)

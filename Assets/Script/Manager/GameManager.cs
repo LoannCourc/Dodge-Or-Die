@@ -33,7 +33,12 @@ public class GameManager : MonoBehaviour
             return instance;
         }
     }
-    
+
+    private void Awake()
+    {
+        AudioManager.Instance.PlaySound("IntroMusic");
+    }
+
     void Start()
     {
         if (gridManager == null || arrowManager == null || spawnManager == null)
