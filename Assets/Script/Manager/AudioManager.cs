@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
+using DG.Tweening; // Assurez-vous d'importer le namespace DOTween
 
 public class AudioManager : MonoBehaviour
 {
@@ -11,17 +11,16 @@ public class AudioManager : MonoBehaviour
     {
         public string name;
         public AudioClip clip;
+        public bool loop;
+        public bool isMusic; // Booléen pour différencier la musique des SFX
+        [Range(0f, 1f)]
         public float volume = 1f;
-        public float pitch = 1f;
-        public bool loop = false;
+        [HideInInspector]
+        public AudioSource source;
     }
 
     public List<Sound> sounds;
-    public GameObject audioSourcePrefab;
-    public int poolSize = 10;
-
-    private Dictionary<string, Sound> soundDictionary;
-    private Queue<AudioSource> audioSourcePool;
+    public float fadeDuration = 1f; // Durée du fondu en secondes
 
     void Awake()
     {
@@ -29,96 +28,87 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            InitializeSoundDictionary();
-            InitializeAudioSourcePool();
         }
         else
         {
             Destroy(gameObject);
+            return;
+        }
+
+        foreach (Sound s in sounds)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+            s.source.loop = s.loop;
+            s.source.volume = 0f; // Commence à 0 volume pour le fade-in
         }
     }
 
-    private void InitializeSoundDictionary()
+    public void PlaySound(string name)
     {
-        soundDictionary = new Dictionary<string, Sound>();
-        foreach (Sound sound in sounds)
+        Sound s = sounds.Find(sound => sound.name == name);
+        if (s != null)
         {
-            if (!soundDictionary.ContainsKey(sound.name))
+            s.source.volume = 0f; // Assure que le volume commence à 0
+            s.source.Play();
+            s.source.DOFade(s.volume, fadeDuration); // Fade-in au volume défini
+        }
+        else
+        {
+            Debug.LogWarning($"Sound {name} not found!");
+        }
+    }
+
+    public void StopSound(string name)
+    {
+        Sound s = sounds.Find(sound => sound.name == name);
+        if (s != null)
+        {
+            if (s.isMusic)
             {
-                soundDictionary.Add(sound.name, sound);
+                s.source.DOFade(0, fadeDuration).OnComplete(() => s.source.Stop());
             }
             else
             {
-                Debug.LogWarning($"Sound {sound.name} is already in the dictionary!");
-            }
-        }
-    }
-
-    private void InitializeAudioSourcePool()
-    {
-        audioSourcePool = new Queue<AudioSource>();
-        for (int i = 0; i < poolSize; i++)
-        {
-            AudioSource source = Instantiate(audioSourcePrefab, transform).GetComponent<AudioSource>();
-            source.gameObject.SetActive(false);
-            audioSourcePool.Enqueue(source);
-        }
-    }
-
-    public void PlaySound(string soundName)
-    {
-        if (soundDictionary.TryGetValue(soundName, out Sound sound))
-        {
-            AudioSource source = GetPooledAudioSource();
-            source.clip = sound.clip;
-            source.volume = sound.volume;
-            source.pitch = sound.pitch;
-            source.loop = sound.loop;
-            source.gameObject.SetActive(true);
-            source.Play();
-            if (!sound.loop)
-            {
-                StartCoroutine(ReturnToPoolAfterPlaying(source, sound.clip.length));
+                s.source.Stop();
             }
         }
         else
         {
-            Debug.LogWarning($"Sound {soundName} not found in AudioManager!");
+            Debug.LogWarning($"Sound {name} not found!");
         }
     }
 
-    private AudioSource GetPooledAudioSource()
+    public void SetVolume(string name, float volume)
     {
-        if (audioSourcePool.Count > 0)
+        Sound s = sounds.Find(sound => sound.name == name);
+        if (s != null)
         {
-            return audioSourcePool.Dequeue();
+            s.source.volume = volume;
         }
         else
         {
-            AudioSource newSource = Instantiate(audioSourcePrefab, transform).GetComponent<AudioSource>();
-            return newSource;
+            Debug.LogWarning($"Sound {name} not found!");
         }
     }
 
-    private IEnumerator ReturnToPoolAfterPlaying(AudioSource source, float delay)
+    public void StopAllSounds()
     {
-        yield return new WaitForSeconds(delay);
-        source.Stop();
-        source.gameObject.SetActive(false);
-        audioSourcePool.Enqueue(source);
-    }
-
-    public void StopSound(string soundName)
-    {
-        foreach (AudioSource source in GetComponentsInChildren<AudioSource>())
+        foreach (Sound s in sounds)
         {
-            if (source.isPlaying && source.clip.name == soundName)
+            if (s.isMusic)
             {
-                source.Stop();
-                source.gameObject.SetActive(false);
-                audioSourcePool.Enqueue(source);
-                break;
+                s.source.DOFade(0, fadeDuration).OnComplete(() => s.source.Stop());
+            }
+            else
+            {
+                s.source.Stop();
             }
         }
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        AudioListener.volume = volume;
     }
 }

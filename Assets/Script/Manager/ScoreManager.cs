@@ -53,7 +53,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Score: " + score.ToString();
+            scoreText.text = score.ToString();
             GameManager.Instance.NewScore(score);
         }
     }
