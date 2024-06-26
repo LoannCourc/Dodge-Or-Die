@@ -1,18 +1,16 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-    public GridManager gridManager; // Référence au GridManager
-    public ArrowManager arrowManager; // Référence au ArrowManager
-    public SpawnManager spawnManager; // Référence au SpawnManager
-    public WaveManager waveManager; // Référence au SpawnManager
+    public GridManager gridManager;
+    public ArrowManager arrowManager;
+    public SpawnManager spawnManager;
+    public WaveManager waveManager;
     public GameObject player;
     private int currentGridSize;
     private int currentScore;
     private Vector3 centerPos;
-    private static GameManager instance; // Instance statique du ScoreManager
+    private static GameManager instance;
 
     public static GameManager Instance
     {
@@ -20,13 +18,10 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
-                // Rechercher une instance existante dans la scène
                 instance = FindObjectOfType<GameManager>();
-
-                // Si aucune instance n'existe, créer un nouvel objet ScoreManager dans la scène
                 if (instance == null)
                 {
-                    GameObject gameManagerObject = new GameObject("ScoreManager");
+                    GameObject gameManagerObject = new GameObject("GameManager");
                     instance = gameManagerObject.AddComponent<GameManager>();
                 }
             }
@@ -54,7 +49,8 @@ public class GameManager : MonoBehaviour
     public void InitializeGame()
     {
         currentGridSize = gridManager.GetGridSize();
-        float tileSpacing = gridManager.GetTileSpacing();
+        float tileSpacing = ScaleManager.Instance.CalculateTileSpacing(currentGridSize);
+        gridManager.InitializeGrid(currentGridSize);
         arrowManager.InitializeArrows(currentGridSize, tileSpacing);
         spawnManager.InitializeSpawnPoints(currentGridSize, tileSpacing);
     }
@@ -64,7 +60,7 @@ public class GameManager : MonoBehaviour
         currentScore = score;
         waveManager.OnScoreUpdated(currentScore);
     }
-    
+
     public void StartGame()
     {
         player.SetActive(true);
@@ -74,31 +70,26 @@ public class GameManager : MonoBehaviour
 
     void ChangePlayerPosition()
     {
-        float tileSpacing = gridManager.GetTileSpacing();
-        // Déplacer le joueur au centre d'une tuile si la grille est de taille 4x4
+        float tileSpacing = ScaleManager.Instance.CalculateTileSpacing(currentGridSize);
         if (currentGridSize == 4)
         {
             int randomPos = Random.Range(0, 4);
             switch (randomPos)
             {
-                case 0 : 
-                    centerPos = new Vector3(tileSpacing/2f, tileSpacing/2f, tileSpacing/2f);
+                case 0:
+                    centerPos = new Vector3(tileSpacing / 2f, tileSpacing / 2f, 0);
                     break;
-                case 1 : 
-                    centerPos = new Vector3(-tileSpacing/2f, tileSpacing/2f, tileSpacing/2f);
+                case 1:
+                    centerPos = new Vector3(-tileSpacing / 2f, tileSpacing / 2f, 0);
                     break;
-                case 2 : 
-                    centerPos = new Vector3(-tileSpacing/2f, -tileSpacing/2f, tileSpacing/2f);
+                case 2:
+                    centerPos = new Vector3(-tileSpacing / 2f, -tileSpacing / 2f, 0);
                     break;
-                case 3 : 
-                    centerPos = new Vector3(tileSpacing/2f, -tileSpacing/2f, tileSpacing/2f);
+                case 3:
+                    centerPos = new Vector3(tileSpacing / 2f, -tileSpacing / 2f, 0);
                     break;
             }
-
-            Vector3 centerPosition = centerPos;
-            
-            // Déplacer le joueur à la position centrale
-            player.transform.position = centerPosition;
+            player.transform.position = centerPos;
         }
     }
 }

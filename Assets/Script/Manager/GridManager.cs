@@ -1,58 +1,46 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    public GameObject groundTilePrefab; // Prefab des tiles du sol
-    public int gridSize = 3; // Taille de la grille (par exemple 3x3)
-    public float tileSpacing = 1.0f; // Espacement entre les tiles
-
-    private GameObject[,] groundTiles; // Tableau 2D pour les tiles du sol
-
-    void Start()
-    {
-        InitializeGrid(gridSize);
-    }
+    public int gridSize;
+    public GameObject tilePrefab;
+    private GameObject[] tiles;
 
     public void InitializeGrid(int size)
     {
         gridSize = size;
-        ClearGrid();
+        CreateGrid();
+    }
 
-        float halfSize = (size - 1) * tileSpacing / 2;
-        groundTiles = new GameObject[size, size];
+    private void CreateGrid()
+    {
+        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
+        float halfSize = (gridSize - 1) * tileSpacing / 2;
 
-        for (int x = 0; x < size; x++)
+        if (tiles != null)
         {
-            for (int y = 0; y < size; y++)
+            foreach (GameObject tile in tiles)
             {
-                Vector3 tilePosition = new Vector3(-halfSize + x * tileSpacing, -halfSize + y * tileSpacing, 0);
-                groundTiles[x, y] = Instantiate(groundTilePrefab, tilePosition, Quaternion.identity, transform);
+                Destroy(tile);
             }
         }
+
+        tiles = new GameObject[gridSize * gridSize];
+
+        for (int x = 0; x < gridSize; x++)
+        {
+            for (int y = 0; y < gridSize; y++)
+            {
+                Vector3 position = new Vector3(-halfSize + x * tileSpacing, -halfSize + y * tileSpacing, 0);
+                GameObject tile = Instantiate(tilePrefab, position, Quaternion.identity, transform);
+                tiles[x * gridSize + y] = tile;
+            }
+        }
+        ScaleManager.Instance.ScaleObjects(gridSize);
     }
 
     public int GetGridSize()
     {
         return gridSize;
-    }
-
-    public float GetTileSpacing()
-    {
-        return tileSpacing;
-    }
-    
-    private void ClearGrid()
-    {
-        if (groundTiles != null)
-        {
-            foreach (GameObject tile in groundTiles)
-            {
-                if (tile != null)
-                {
-                    Destroy(tile);
-                }
-            }
-        }
     }
 }

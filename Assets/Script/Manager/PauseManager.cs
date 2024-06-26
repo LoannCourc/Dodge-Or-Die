@@ -1,31 +1,54 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class PauseManager : MonoBehaviour
+public class MenuPause : MonoBehaviour
 {
-    public static bool isPaused = false;
     public GameObject pauseMenuUI;
     public Button resumeButton;
     public Button quitButton;
-    public Button toggleMusicButton;
+    public Button musicButton;
+    public Button pauseButton;
 
-    private void Start()
+    void Start()
     {
-        // Assign button click listeners
         resumeButton.onClick.AddListener(ResumeGame);
         quitButton.onClick.AddListener(QuitGame);
-        toggleMusicButton.onClick.AddListener(ToggleMusic);
-
-        // Hide the pause menu initially
-        pauseMenuUI.SetActive(false);
+        musicButton.onClick.AddListener(ToggleMusic);
+        pauseButton.onClick.AddListener(Pause);
     }
 
+    public void ResumeGame()
+    {
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void ToggleMusic()
+    {
+        AudioManager.Instance.ToggleMusic();
+    }
+
+    void Pause()
+    {
+        if (pauseMenuUI.activeSelf)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
+            if (pauseMenuUI.activeSelf)
             {
                 ResumeGame();
             }
@@ -36,34 +59,9 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    public void ResumeGame()
-    {
-        pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        isPaused = false;
-    }
-
     void PauseGame()
     {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
-        isPaused = true;
-    }
-
-    public void QuitGame()
-    {
-        // If in the editor, stop playing
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        // If in the built application, quit
-        Application.Quit();
-#endif
-    }
-
-    public void ToggleMusic()
-    {
-        // This method should toggle the music on or off
-        //AudioManager.Instance.StopAllMusic();
     }
 }

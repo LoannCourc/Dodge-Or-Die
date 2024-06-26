@@ -124,6 +124,9 @@ public class WaveManager : MonoBehaviour
         instantiatedObject.GetComponent<BulletController>().SetDirection(direction);
         SpawnData spawnData = csvReader.GetSpawnData(currentScore, gridSize);
         instantiatedObject.GetComponent<BulletController>().SetSpeed(spawnData.bulletSpeed);
+        
+        // Appel pour redimensionner l'objet instancié
+        ScaleManager.Instance.ScaleSpawnedObjects(instantiatedObject, ScaleManager.Instance.CalculateScaleObject(currentGridSize));
     }
 
     public IEnumerator SpawnCrash()
@@ -135,7 +138,7 @@ public class WaveManager : MonoBehaviour
         Vector3 position = indicator.transform.position;
 
         // Calcule la position centrée sur une tuile la plus proche
-        float tileSpacing = gridManager.GetTileSpacing();
+        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
         float offset = (gridSize % 2 == 0) ? tileSpacing / 2f : 0f;  // Ajustement pour les grilles de taille paire
         float centeredX = Mathf.Round((position.x - offset) / tileSpacing) * tileSpacing + offset;
         float centeredY = position.y;  // Assume no vertical adjustment needed

@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
-using DG.Tweening; // Assurez-vous d'importer le namespace DOTween
+using DG.Tweening;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -21,6 +23,9 @@ public class AudioManager : MonoBehaviour
 
     public List<Sound> sounds;
     public float fadeDuration = 1f; // Durée du fondu en secondes
+    public AudioMixer audioMixer; // Référence à l'AudioMixer
+    public string musicVolumeParameter = "MusicVolume"; // Le paramètre du volume de la musique dans l'AudioMixer
+    private bool isMusicMuted = false; // Pour suivre l'état de la musique
 
     void Awake()
     {
@@ -40,18 +45,45 @@ public class AudioManager : MonoBehaviour
             s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
             s.source.loop = s.loop;
-            s.source.volume = 0f; // Commence à 0 volume pour le fade-in
+            s.source.volume = s.isMusic ? 0f : s.volume; // Commence à 0 volume pour la musique pour le fade-in
+
+            // Vérifiez si le groupe existe dans l'AudioMixer avant de l'assigner
+            AudioMixerGroup[] matchingGroups = audioMixer.FindMatchingGroups(s.isMusic ? "Music" : "Master");
+            if (matchingGroups.Length > 0)
+            {
+                s.source.outputAudioMixerGroup = matchingGroups[0];
+                s.source.outputAudioMixerGroup = audioMixer.FindMatchingGroups(s.isMusic ? "Music" : "Master")[0];
+            }
+            else
+            {
+                Debug.LogWarning($"AudioMixerGroup {(s.isMusic ? "Music" : "Master")} not found!");
+            }
         }
     }
-
+    
     public void PlaySound(string name)
     {
         Sound s = sounds.Find(sound => sound.name == name);
         if (s != null)
         {
-            s.source.volume = 0f; // Assure que le volume commence à 0
-            s.source.Play();
-            s.source.DOFade(s.volume, fadeDuration); // Fade-in au volume défini
+            if (s.isMusic)
+            {
+                if (!s.source.isPlaying)
+                {
+                    s.source.volume = 0f; // Assure que le volume commence à 0 pour la musique
+                    s.source.Play();
+                    s.source.DOFade(s.volume, fadeDuration); // Fade-in au volume défini pour la musique
+                }
+                else
+                {
+                    s.source.DOFade(s.volume, fadeDuration); // Juste faire un fade-in si la musique est déjà en cours de lecture
+                }
+            }
+            else
+            {
+                s.source.volume = s.volume;
+                s.source.Play();
+            }
         }
         else
         {
@@ -110,5 +142,14 @@ public class AudioManager : MonoBehaviour
     public void SetMasterVolume(float volume)
     {
         AudioListener.volume = volume;
+    }
+
+    // Fonction pour basculer la musique
+    public void ToggleMusic()
+    {
+        isMusicMuted = !isMusicMuted;
+        float targetVolume = isMusicMuted ? -80f : 0f; // -80dB pour mute, 0dB pour volume normal
+        Debug.Log($"Setting Music Volume to: {targetVolume}");
+        audioMixer.SetFloat(musicVolumeParameter, targetVolume);
     }
 }

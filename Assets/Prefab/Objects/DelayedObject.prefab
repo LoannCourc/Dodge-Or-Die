@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51524f43f8d621740a0381337498bfa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 2
+  damage: 1
 --- !u!114 &6206427098504860003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +113,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  deathTime: 2
 --- !u!65 &2525341906346559431
 BoxCollider:
   m_ObjectHideFlags: 0

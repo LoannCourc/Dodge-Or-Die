@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float swipeThreshold = 50f; // Sensibilité du swipe
-    public float moveSpeed = 2f; // Vitesse de déplacement
+    public float swipeThreshold = 50f;
+    public float moveSpeed = 2f;
 
     private Vector2 startTouchPosition;
     private Vector2 currentTouchPosition;
@@ -12,11 +12,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 targetPosition;
     private bool isMoving = false;
 
-    private GridManager gridManager; // Référence au GridManager
+    private GridManager gridManager;
 
     private void Start()
     {
-        gridManager = FindObjectOfType<GridManager>(); // Trouve le GridManager dans la scène
+        gridManager = FindObjectOfType<GridManager>();
         if (gridManager == null)
         {
             Debug.LogError("GridManager non trouvé dans la scène.");
@@ -134,17 +134,14 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 CalculateTargetPosition(Vector3 direction)
     {
-        // Récupérer l'espacement entre les cases depuis GridManager
-        float tileSpacing = gridManager.tileSpacing;
+        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
+        int gridSize = gridManager.GetGridSize();
 
-        // Calculer la position cible en utilisant tileSpacing correctement
         Vector3 newPosition = transform.position + direction * tileSpacing;
 
-        // Limiter le mouvement à une grille de taille gridSize x gridSize
-        float minPosition = -(gridManager.gridSize - 1) / 2f * tileSpacing;
-        float maxPosition = (gridManager.gridSize - 1) / 2f * tileSpacing;
+        float minPosition = -(gridSize - 1) / 2f * tileSpacing;
+        float maxPosition = (gridSize - 1) / 2f * tileSpacing;
 
-        // Assurer que la nouvelle position reste dans les limites de la grille
         newPosition.x = Mathf.Clamp(newPosition.x, minPosition, maxPosition);
         newPosition.y = Mathf.Clamp(newPosition.y, minPosition, maxPosition);
 
@@ -153,10 +150,11 @@ public class PlayerController : MonoBehaviour
 
     private bool IsValidMove(Vector3 position)
     {
-        // Vérifier si la nouvelle position est valide dans la grille gridSize x gridSize
-        float tileSpacing = gridManager.tileSpacing;
-        float minPosition = -(gridManager.gridSize - 1) / 2f * tileSpacing;
-        float maxPosition = (gridManager.gridSize - 1) / 2f * tileSpacing;
+        int gridSize = gridManager.GetGridSize();
+        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
+
+        float minPosition = -(gridSize - 1) / 2f * tileSpacing;
+        float maxPosition = (gridSize - 1) / 2f * tileSpacing;
 
         return position.x >= minPosition && position.x <= maxPosition &&
                position.y >= minPosition && position.y <= maxPosition;
