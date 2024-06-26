@@ -7,6 +7,7 @@ public class SliderManager : MonoBehaviour
     public Slider gridSizeSlider;
     public TextMeshProUGUI gridSizeText;
     public GameObject sliderPanel; // Référence vers le panel contenant le slider
+    public GameObject panelPause; // Référence vers le panel contenant le slider
     
     public GridManager gridManager;
     public GameManager gameManager;
@@ -20,6 +21,7 @@ public class SliderManager : MonoBehaviour
     public void DisableSliderPanel()
     {
         sliderPanel.SetActive(false);
+        panelPause.SetActive(true);
         gameManager.StartGame();
         Time.timeScale = 1f;
         AudioManager.Instance.StopSound("IntroMusic");

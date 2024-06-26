@@ -6,7 +6,8 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 100;
     public List<GameObject> hearths;
 
-    public GameObject deathPanel; 
+    public GameObject deathPanel;
+    public GameObject panelPause;
     
     private int _currentHealth;
 
@@ -45,6 +46,7 @@ public class PlayerHealth : MonoBehaviour
         AudioManager.Instance.StopSound("MainMusic");
         // Logique de mort du joueur
         deathPanel.SetActive(true);
+        panelPause.SetActive(false);
         Time.timeScale = 0f;
         // Ici, vous pouvez ajouter d'autres actions comme la réinitialisation du jeu, l'affichage d'un écran de fin, etc.
     }
