@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
         if (gridManager == null || arrowManager == null || spawnManager == null)
         {
             Debug.LogError("GridManager, ArrowManager ou SpawnManager non trouvé dans la scène.");

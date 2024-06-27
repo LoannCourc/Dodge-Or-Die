@@ -149,7 +149,6 @@ public class AudioManager : MonoBehaviour
     {
         isMusicMuted = !isMusicMuted;
         float targetVolume = isMusicMuted ? -80f : 0f; // -80dB pour mute, 0dB pour volume normal
-        Debug.Log($"Setting Music Volume to: {targetVolume}");
         audioMixer.SetFloat(musicVolumeParameter, targetVolume);
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -8,18 +9,26 @@ public class PlayerHealth : MonoBehaviour
 
     public GameObject deathPanel;
     public GameObject panelPause;
-    
+
+    private Camera _mainCamera;
     private int _currentHealth;
 
     private void Start()
     {
         _currentHealth = maxHealth;
+        _mainCamera = Camera.main;
     }
 
     public void TakeDamage(int damage)
     {
         _currentHealth -= damage;
         hearths[_currentHealth].SetActive(false);
+        
+        // Ajouter l'effet de tremblement de la caméra
+        if (_mainCamera != null)
+        {
+            _mainCamera.transform.DOShakePosition(0.5f, 0.2f, 20, 90, false, true);
+        }
         
         // Vérifier si le joueur est mort
         if (_currentHealth <= 0)
@@ -47,6 +56,7 @@ public class PlayerHealth : MonoBehaviour
         // Logique de mort du joueur
         deathPanel.SetActive(true);
         panelPause.SetActive(false);
+        gameObject.SetActive(false);
         Time.timeScale = 0f;
         // Ici, vous pouvez ajouter d'autres actions comme la réinitialisation du jeu, l'affichage d'un écran de fin, etc.
     }

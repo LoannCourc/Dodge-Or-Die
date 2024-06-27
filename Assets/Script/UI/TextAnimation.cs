@@ -25,7 +25,7 @@ public class TextAnimation : MonoBehaviour
             {
                 var orig = verts[charInfo.vertexIndex + j];
                 verts[charInfo.vertexIndex + j] =
-                    orig + new Vector3(0, Mathf.Sin(Time.time * 2f + orig.x * 0.01f) * 10f, 0);
+                    orig + new Vector3(0, Mathf.Sin(Time.time * 5f + orig.x * 0.02f) * 2f, 0);
             }
         }
 
