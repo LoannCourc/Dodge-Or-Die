@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour
         public AudioClip clip;
         public bool loop;
         public bool isMusic; // Booléen pour différencier la musique des SFX
-        [Range(0f, 1f)]
+        [Range(0f, 3f)]
         public float volume = 1f;
         [HideInInspector]
         public AudioSource source;
@@ -25,7 +25,9 @@ public class AudioManager : MonoBehaviour
     public float fadeDuration = 1f; // Durée du fondu en secondes
     public AudioMixer audioMixer; // Référence à l'AudioMixer
     public string musicVolumeParameter = "MusicVolume"; // Le paramètre du volume de la musique dans l'AudioMixer
+    public string sfxVolumeParameter = "SFXVolume"; // Le paramètre du volume des SFX dans l'AudioMixer
     private bool isMusicMuted = false; // Pour suivre l'état de la musique
+    private bool isSFXMuted = false; // Pour suivre l'état des SFX
 
     void Awake()
     {
@@ -79,7 +81,7 @@ public class AudioManager : MonoBehaviour
                     s.source.DOFade(s.volume, fadeDuration); // Juste faire un fade-in si la musique est déjà en cours de lecture
                 }
             }
-            else
+            else if (!s.isMusic && !isSFXMuted) // Vérifiez si les SFX sont activés avant de jouer
             {
                 s.source.volume = s.volume;
                 s.source.Play();
@@ -96,20 +98,14 @@ public class AudioManager : MonoBehaviour
         Sound s = sounds.Find(sound => sound.name == name);
         if (s != null)
         {
-            if (s.isMusic)
-            {
-                s.source.DOFade(0, fadeDuration).OnComplete(() => s.source.Stop());
-            }
-            else
-            {
-                s.source.Stop();
-            }
+            s.source.Stop();
         }
         else
         {
             Debug.LogWarning($"Sound {name} not found!");
         }
     }
+
 
     public void SetVolume(string name, float volume)
     {
@@ -149,6 +145,16 @@ public class AudioManager : MonoBehaviour
     {
         isMusicMuted = !isMusicMuted;
         float targetVolume = isMusicMuted ? -80f : 0f; // -80dB pour mute, 0dB pour volume normal
+        
         audioMixer.SetFloat(musicVolumeParameter, targetVolume);
+    }
+
+    // Fonction pour basculer les SFX
+    public void ToggleSFX()
+    {
+        isSFXMuted = !isSFXMuted;
+        float targetVolume = isSFXMuted ? -80f : 0f; // -80dB pour mute, 0dB pour volume normal
+        
+        audioMixer.SetFloat(sfxVolumeParameter, targetVolume);
     }
 }

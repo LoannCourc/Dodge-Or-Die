@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!243 &-7355442031006534341
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SFX
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: fac740d455105a54c914831bc7aa1c36
+  m_Children: []
+  m_Volume: dcb0769c3d1496d4a838281aa36a6116
+  m_Pitch: 0d1f5da87532b224eb5f65598e18341f
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 6950805883437318071}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -18,10 +37,13 @@ AudioMixerController:
   m_ExposedParameters:
   - guid: e42a921164adade4086840c205f95c05
     name: MusicVolume
+  - guid: dcb0769c3d1496d4a838281aa36a6116
+    name: SFXVolume
   m_AudioMixerGroupViews:
   - guids:
     - d5cafc90b12eb1a4a84d63e22420e92c
     - 705422fc5115bd94cb03345722bb144e
+    - fac740d455105a54c914831bc7aa1c36
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -36,6 +58,7 @@ AudioMixerGroupController:
   m_GroupID: d5cafc90b12eb1a4a84d63e22420e92c
   m_Children:
   - {fileID: 7175810300272752887}
+  - {fileID: -7355442031006534341}
   m_Volume: 6a4913ff0a0411b40a118d292a3c1ec5
   m_Pitch: ace79d13e23f858439837e6808b61fbc
   m_Send: 00000000000000000000000000000000
@@ -71,6 +94,20 @@ AudioMixerSnapshotController:
   m_FloatValues:
     e42a921164adade4086840c205f95c05: 0
   m_TransitionOverrides: {}
+--- !u!244 &6950805883437318071
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: b2f43b87d909f2b40a66ac135bb080a6
+  m_EffectName: Attenuation
+  m_MixLevel: 80f407e8c26b36b44903a343a7853bc7
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!243 &7175810300272752887
 AudioMixerGroupController:
   m_ObjectHideFlags: 0

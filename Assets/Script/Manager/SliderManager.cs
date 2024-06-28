@@ -11,7 +11,9 @@ public class SliderManager : MonoBehaviour
     
     public GridManager gridManager;
     public GameManager gameManager;
-   
+
+    private bool _firstTime;
+    
     private void Start()
     {
         gridSizeSlider.onValueChanged.AddListener(OnSliderValueChanged);
@@ -32,11 +34,15 @@ public class SliderManager : MonoBehaviour
     {
         int gridSize = Mathf.RoundToInt(value);
         gridSizeText.text = gridSize + " x " + gridSize;
-       
+        if (_firstTime)
+        {
+            AudioManager.Instance.PlaySound("SliderSound");
+        }
         // Met à jour la grille et redimensionne les objets en fonction de la taille de la grille
         gridManager.InitializeGrid(gridSize); // Initialise la grille
         ScaleManager.Instance.ScaleObjects(gridSize); // Redimensionne les objets en fonction de la taille de la grille
         // Autres actions à effectuer après avoir initialisé la grille et redimensionné les objets
         gameManager.InitializeGame();
+        _firstTime = true;
     }
 }

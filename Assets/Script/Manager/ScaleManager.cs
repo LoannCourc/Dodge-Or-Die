@@ -1,10 +1,38 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ScaleManager : MonoBehaviour
 {
     public GameObject player;
-    public static ScaleManager Instance;
+    
+    [Header("Scale Factors")]
+    [Tooltip("Scale factors for different grid sizes.")]
+    public float scale3x3 = 0.7f;
+    public float scale4x4 = 0.6f;
+    public float scale5x5 = 0.5f;
 
+    [FormerlySerializedAs("spacing3x3")]
+    [Header("Tile Spacing")]
+    [Tooltip("Tile spacing for different grid sizes.")]
+    public float tileSpacing3x3 = 1f;
+    public float tileSpacing4x4 = 0.9f;
+    public float tileSpacing5x5 = 0.75f;
+
+    [Header("General Scale Factors")]
+    [Tooltip("General scale factors for different grid sizes.")]
+    public float generalScale3x3 = 0.8f;
+    public float generalScale4x4 = 0.7f;
+    public float generalScale5x5 = 0.6f;
+
+    [Header("Player Scale Factors")]
+    [Tooltip("Scale factors for the player at different grid sizes.")]
+    public float playerScale3x3 = 0.6f;
+    public float playerScale4x4 = 0.5f;
+    public float playerScale5x5 = 0.4f;
+    
+    
+    public static ScaleManager Instance;
+    
     private float tileSpacing;
     private float spacing;
 
@@ -39,48 +67,48 @@ public class ScaleManager : MonoBehaviour
 
     public float CalculateScaleObject(int gridSize)
     {
-        float scaleFactor = 1f;
         switch (gridSize)
         {
-            case 3: scaleFactor = 0.7f; break;
-            case 4: scaleFactor = 0.6f; break;
-            case 5: scaleFactor = 0.5f; break;
+            case 3: return scale3x3;
+            case 4: return scale4x4;
+            case 5: return scale5x5;
+            default: return 1f;  // Default scale factor
         }
-        return scaleFactor;
     }
+
     public float CalculateTileSpacing(int gridSize)
     {
         switch (gridSize)
         {
-            case 3: spacing = 1f; break;
-            case 4: spacing = 0.9f; break;
-            case 5: spacing = 0.75f; break;
+            case 3: return tileSpacing3x3;
+            case 4: return tileSpacing4x4;
+            case 5: return tileSpacing5x5;
+            default: return 1f;  // Default spacing
         }
-        tileSpacing = spacing;
-        return spacing;
     }
+
     private float CalculateScaleFactor(int gridSize)
     {
-        float scaleFactor = 1f;
         switch (gridSize)
         {
-            case 3: scaleFactor = 0.8f; break;
-            case 4: scaleFactor = 0.7f; break;
-            case 5: scaleFactor = 0.6f; break;
+            case 3: return generalScale3x3;
+            case 4: return generalScale4x4;
+            case 5: return generalScale5x5;
+            default: return 1f;  // Default general scale factor
         }
-        return scaleFactor;
     }
+
     public float CalculateScalePlayer(int gridSize)
     {
-        float scaleFactor = 1f;
         switch (gridSize)
         {
-            case 3: scaleFactor = 0.6f; break;
-            case 4: scaleFactor = 0.5f; break;
-            case 5: scaleFactor = 0.4f; break;
+            case 3: return playerScale3x3;
+            case 4: return playerScale4x4;
+            case 5: return playerScale5x5;
+            default: return 1f;  // Default player scale factor
         }
-        return scaleFactor;
     }
+    
     private void ScaleGridTiles(float scaleFactor)
     {
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("GridTile");

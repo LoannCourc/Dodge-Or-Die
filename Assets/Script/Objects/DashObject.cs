@@ -51,6 +51,11 @@ public class DashObject : MonoBehaviour
         targetPosition = target;
         isMoving = true;
     }
+    public void SetRotation(float angle)
+    {
+        // Ajuste la rotation du sprite pour correspondre à l'angle de l'arrow
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+    }
 
     private void MoveToTargetPosition()
     {
@@ -71,7 +76,7 @@ public class DashObject : MonoBehaviour
         yield return new WaitForSeconds(stopTime);
         trail.SetActive(true);
         hasStopped = true;
-
+        AudioManager.Instance.PlaySound("DashSound");
         // Reprendre le mouvement dans la direction initiale à une vitesse accélérée
         Vector3 endPosition = targetPosition + initialDirection * 10f; // Modifier la distance selon les besoins
         float startTime = Time.time;

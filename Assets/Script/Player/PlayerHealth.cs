@@ -9,7 +9,10 @@ public class PlayerHealth : MonoBehaviour
 
     public GameObject deathPanel;
     public GameObject panelPause;
-
+    
+    [Header("Damage Effects")]
+    public ParticleSystem damageParticles; 
+    
     private Camera _mainCamera;
     private int _currentHealth;
 
@@ -29,6 +32,11 @@ public class PlayerHealth : MonoBehaviour
         {
             _mainCamera.transform.DOShakePosition(0.5f, 0.2f, 20, 90, false, true);
         }
+        if (damageParticles != null)
+        {
+            ParticleSystem particles = Instantiate(damageParticles, transform.position, Quaternion.identity, transform);
+            Destroy(particles.gameObject, particles.main.duration);
+        }
         
         // Vérifier si le joueur est mort
         if (_currentHealth <= 0)
@@ -46,6 +54,7 @@ public class PlayerHealth : MonoBehaviour
 
             // Appliquer des dégâts au joueur
             TakeDamage(damage);
+            AudioManager.Instance.PlaySound("HitSound");
             
             other.gameObject.SetActive(false);
         }
@@ -53,6 +62,7 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         AudioManager.Instance.StopSound("MainMusic");
+        AudioManager.Instance.PlaySound("PlayerDeath");
         // Logique de mort du joueur
         deathPanel.SetActive(true);
         panelPause.SetActive(false);

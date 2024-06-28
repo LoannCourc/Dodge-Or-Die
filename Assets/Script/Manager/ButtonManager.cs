@@ -7,6 +7,7 @@ public class ButtonManager : MonoBehaviour
 {
     public void Restart()
     {
+        AudioManager.Instance.PlaySound("ClickSound");
         Scene scene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(scene.name);
         Time.timeScale = 1f;
@@ -14,6 +15,7 @@ public class ButtonManager : MonoBehaviour
 
     public void Menu()
     {
+        AudioManager.Instance.PlaySound("ClickSound");
         Application.Quit();
     }
 }

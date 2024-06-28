@@ -115,4 +115,17 @@ public class ArrowManager : MonoBehaviour
             return Vector3.zero;
         }
     }
+    public float GetArrowRotation(int index)
+    {
+        if (index >= 0 && index < arrows.Length && arrows[index] != null)
+        {
+            return arrows[index].transform.eulerAngles.z;
+        }
+        else
+        {
+            Debug.LogWarning("Arrow rotation not found for index: " + index);
+            return 0f; // Retourne 0 degrés si la position n'est pas trouvée
+        }
+    }
+
 }

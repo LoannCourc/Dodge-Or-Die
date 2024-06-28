@@ -34,7 +34,7 @@ public class MeteorSpawner : MonoBehaviour
     private void SpawnMeteor()
     {
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        GameObject meteor = Instantiate(meteorPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject meteor = Instantiate(meteorPrefab, spawnPoint.position, Quaternion.identity, transform);
 
         // Fix Z position to 0
         meteor.transform.position = new Vector3(meteor.transform.position.x, meteor.transform.position.y, 0f);

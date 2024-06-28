@@ -151,15 +151,20 @@ public class CSVReader : MonoBehaviour
         int csvIndex = gridSize - 3; // Supposant que gridSize 3 correspond à csvFiles[0], 4 à csvFiles[1], etc.
 
         // Vérifier si le score actuel est inférieur au score minimum dans le CSV
+        SpawnData selectedData = null;
         foreach (SpawnData spawnData in spawnDataLists[csvIndex])
         {
             if (currentScore >= spawnData.scoreThreshold)
             {
-                return spawnData;
+                selectedData = spawnData;
+            }
+            else
+            {
+                break; // Sortir de la boucle si le score est inférieur au seuil actuel
             }
         }
 
-        return null;
+        return selectedData;
     }
 }
 

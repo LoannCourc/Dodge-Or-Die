@@ -44,6 +44,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90d42b6d92a86564190cb8e731dda5b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
-  audioSourcePrefab: {fileID: 0}
-  poolSize: 10
+  sounds:
+  - name: IntroMusic
+    clip: {fileID: 8300000, guid: fd4b36e0e62674c4eb5ddf7d4c83d4b7, type: 3}
+    loop: 1
+    isMusic: 1
+    volume: 0.3
+    source: {fileID: 0}
+  - name: MainMusic
+    clip: {fileID: 8300000, guid: a0a4c0ee61b0f654081321fc116105b5, type: 3}
+    loop: 1
+    isMusic: 1
+    volume: 0.3
+    source: {fileID: 0}
+  - name: BulletLauncher
+    clip: {fileID: 8300000, guid: 035e8f6b60e4ea2409490b555a7114be, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: ClickSound
+    clip: {fileID: 8300000, guid: 95ee55f1efeaca14da75202209e9de77, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: CrashSound
+    clip: {fileID: 8300000, guid: 5d3c435bb46863f41849ac9adcf350e4, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: DashSound
+    clip: {fileID: 8300000, guid: 368f53a014a25ed4392316a455830951, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: PlayerDashSound01
+    clip: {fileID: 8300000, guid: 53100c161e093d14381f7486d97d1263, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: PlayerDashSound02
+    clip: {fileID: 8300000, guid: 54ff34002c1813a4a907417b9f7af288, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: PlayerDashSound03
+    clip: {fileID: 8300000, guid: a87fddbe37bdc1f4980e384403430acb, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: PlayerDeath
+    clip: {fileID: 8300000, guid: 546df8084ed8877439848997683356e3, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: SliderSound
+    clip: {fileID: 8300000, guid: 4547d89955ed7914c933a610483bd834, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  - name: HitSound
+    clip: {fileID: 8300000, guid: 76c0001b48e2b6445a19f38a19b99fe8, type: 3}
+    loop: 0
+    isMusic: 0
+    volume: 1
+    source: {fileID: 0}
+  fadeDuration: 1
+  audioMixer: {fileID: 24100000, guid: af06201e79f38a94f86bea6986b4c6ef, type: 2}
+  musicVolumeParameter: MusicVolume

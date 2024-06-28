@@ -1,9 +1,13 @@
 using UnityEngine;
+using DG.Tweening; // Ajouter cette ligne pour utiliser DoTween
 
 public class PlayerController : MonoBehaviour
 {
     public float swipeThreshold = 50f;
     public float moveSpeed = 2f;
+    public string[] swipeSoundNames; // Tableau de noms de sons de swipe
+    public float stretchDuration = 0.2f; // Durée du stretch
+    public float stretchAmount = 1.2f; // Facteur de stretch
 
     private Vector2 startTouchPosition;
     private Vector2 currentTouchPosition;
@@ -13,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private bool isMoving = false;
 
     private GridManager gridManager;
+    private Vector3 initialScale; // Variable pour stocker l'échelle initiale
 
     private void Start()
     {
@@ -23,6 +28,7 @@ public class PlayerController : MonoBehaviour
         }
 
         targetPosition = transform.position;
+        initialScale = transform.localScale; // Stocker l'échelle initiale
     }
 
     private void Update()
@@ -34,6 +40,9 @@ public class PlayerController : MonoBehaviour
             {
                 transform.position = targetPosition;
                 isMoving = false;
+
+                // Revenir à l'échelle initiale après le mouvement
+                transform.DOScale(initialScale, stretchDuration).SetEase(Ease.OutBack);
             }
         }
         else
@@ -72,6 +81,12 @@ public class PlayerController : MonoBehaviour
                         {
                             targetPosition = potentialTargetPosition;
                             isMoving = true;
+
+                            // Jouer un son aléatoire de swipe seulement si le mouvement est valide
+                            PlayRandomSwipeSound();
+
+                            // Appliquer le stretch dans la direction du swipe
+                            ApplyStretch(direction);
                         }
                     }
                     break;
@@ -112,8 +127,40 @@ public class PlayerController : MonoBehaviour
             {
                 targetPosition = potentialTargetPosition;
                 isMoving = true;
+             
+                // Jouer un son aléatoire de swipe seulement si le mouvement est valide
+                PlayRandomSwipeSound();
+
+                // Appliquer le stretch dans la direction du swipe
+                ApplyStretch(direction);
             }
         }
+    }
+
+    // Fonction pour vérifier si un mouvement est valide
+    private bool IsValidMove(Vector3 position)
+    {
+        int gridSize = gridManager.GetGridSize();
+        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
+
+        float minPosition = -(gridSize - 1) / 2f * tileSpacing;
+        float maxPosition = (gridSize - 1) / 2f * tileSpacing;
+
+        return position.x >= minPosition && position.x <= maxPosition &&
+               position.y >= minPosition && position.y <= maxPosition;
+    }
+
+    // Fonction pour jouer un son de swipe aléatoire
+    private void PlayRandomSwipeSound()
+    {
+        if (swipeSoundNames.Length == 0)
+        {
+            Debug.LogWarning("No swipe sound names defined.");
+            return;
+        }
+
+        string randomSoundName = swipeSoundNames[Random.Range(0, swipeSoundNames.Length)];
+        AudioManager.Instance.PlaySound(randomSoundName);
     }
 
     private Vector3 DetermineDirection(Vector2 swipeDirection)
@@ -148,15 +195,19 @@ public class PlayerController : MonoBehaviour
         return newPosition;
     }
 
-    private bool IsValidMove(Vector3 position)
+    // Fonction pour appliquer le stretch dans la direction du mouvement
+    private void ApplyStretch(Vector3 direction)
     {
-        int gridSize = gridManager.GetGridSize();
-        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
+        Vector3 stretchVector = initialScale; // Utiliser l'échelle initiale comme base
+        if (direction == Vector3.up || direction == Vector3.down)
+        {
+            stretchVector.y *= stretchAmount;
+        }
+        else if (direction == Vector3.left || direction == Vector3.right)
+        {
+            stretchVector.x *= stretchAmount;
+        }
 
-        float minPosition = -(gridSize - 1) / 2f * tileSpacing;
-        float maxPosition = (gridSize - 1) / 2f * tileSpacing;
-
-        return position.x >= minPosition && position.x <= maxPosition &&
-               position.y >= minPosition && position.y <= maxPosition;
+        transform.DOScale(stretchVector, stretchDuration).SetEase(Ease.OutQuad);
     }
 }
