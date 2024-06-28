@@ -6184,12 +6184,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2131681279}
     - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
+      propertyPath: arrowManager
+      value: 
+      objectReference: {fileID: 1527946652}
+    - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
+      propertyPath: arrowScale3x3
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
+      propertyPath: arrowScale4x4
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
+      propertyPath: arrowScale5x5
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
       propertyPath: playerScale3x3
       value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
       propertyPath: playerScale4x4
-      value: 0.6
+      value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 3251927197040326979, guid: a53a64dc52b37a44f8244306d7ccd41f, type: 3}
       propertyPath: playerScale5x5
@@ -6737,7 +6753,7 @@ PrefabInstance:
       objectReference: {fileID: 5730773417937199505, guid: ffc0c66bccdb189428bf47306b2beaf9, type: 3}
     - target: {fileID: 644413408506833224, guid: c9de320012f73f84d8edd48110002515, type: 3}
       propertyPath: scaleHearthEffect
-      value: 0.8
+      value: 1.15
       objectReference: {fileID: 0}
     - target: {fileID: 644413408506833224, guid: c9de320012f73f84d8edd48110002515, type: 3}
       propertyPath: hearths.Array.size
@@ -6904,7 +6920,7 @@ PrefabInstance:
     - target: {fileID: 1439650717184906787, guid: 67e912f5de11e60409f4cfccc53b7f98, type: 3}
       propertyPath: arrowPrefab
       value: 
-      objectReference: {fileID: 7124005983611488248, guid: bb7a628d1b5b551408c7881895be3e6e, type: 3}
+      objectReference: {fileID: 7227089083121568148, guid: bb7a628d1b5b551408c7881895be3e6e, type: 3}
     - target: {fileID: 1439650717184906787, guid: 67e912f5de11e60409f4cfccc53b7f98, type: 3}
       propertyPath: gridManager
       value: 

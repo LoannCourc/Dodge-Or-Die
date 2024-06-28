@@ -4,6 +4,7 @@ using UnityEngine.Serialization;
 public class ScaleManager : MonoBehaviour
 {
     public GameObject player;
+    public ArrowManager arrowManager;
     
     [Header("Scale Factors")]
     [Tooltip("Scale factors for different grid sizes.")]
@@ -30,6 +31,11 @@ public class ScaleManager : MonoBehaviour
     public float playerScale4x4 = 0.5f;
     public float playerScale5x5 = 0.4f;
     
+    [Header("Arrow Scale Factors")]
+    [Tooltip("Scale factors for the arrows at different grid sizes.")]
+    public float arrowScale3x3 = 0.6f;
+    public float arrowScale4x4 = 0.5f;
+    public float arrowScale5x5 = 0.4f;
     
     public static ScaleManager Instance;
     
@@ -60,8 +66,9 @@ public class ScaleManager : MonoBehaviour
 
         float scaleFactor = CalculateScaleFactor(gridSize);
         float scalePlayer = CalculateScalePlayer(gridSize);
+        float scaleArrows = CalculateScaleArrows(gridSize);
         ScaleGridTiles(scaleFactor);
-        ScaleArrows(scaleFactor);
+        ScaleArrows(scaleArrows);
         ScalePlayer(scalePlayer);
     }
 
@@ -87,7 +94,7 @@ public class ScaleManager : MonoBehaviour
         }
     }
 
-    private float CalculateScaleFactor(int gridSize)
+    public float CalculateScaleFactor(int gridSize)
     {
         switch (gridSize)
         {
@@ -109,6 +116,17 @@ public class ScaleManager : MonoBehaviour
         }
     }
     
+    public float CalculateScaleArrows(int gridSize)
+    {
+        switch (gridSize)
+        {
+            case 3: return arrowScale3x3;
+            case 4: return arrowScale4x4;
+            case 5: return arrowScale5x5;
+            default: return 1f;  // Default player scale factor
+        }
+    }
+    
     private void ScaleGridTiles(float scaleFactor)
     {
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("GridTile");
@@ -119,12 +137,20 @@ public class ScaleManager : MonoBehaviour
         }
     }
 
-    private void ScaleArrows(float scaleFactor)
+    public void ScaleArrows(float scaleFactor)
     {
-        GameObject[] arrows = GameObject.FindGameObjectsWithTag("Arrow");
-        foreach (GameObject arrow in arrows)
+        GameObject[] arrows = arrowManager.arrows;
+        
+        if (arrows != null)
         {
-            arrow.transform.localScale = Vector3.one * scaleFactor;
+            for (int i = 0; i < arrows.Length; i++)
+            {
+                arrows[i].transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Aucune flèche n'est disponible pour être redimensionnée.");
         }
     }
 

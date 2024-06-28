@@ -1,20 +1,20 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ArrowManager : MonoBehaviour
 {
     public GameObject arrowPrefab; // Le prefab de la flèche
-    public Transform playerTransform; // Référence au transform du joueur
     public float arrowActiveTime = 1.0f; // Durée pendant laquelle la flèche reste active
-
-    private GameObject[] arrows; // Tableau des flèches
+    
+    public GameObject[] arrows; // Tableau des flèches
     private int currentGridSize;
     private float tileSpacing;
 
     void Start()
     {
         // Initialisation des flèches
-        InitializeArrows(3, 1.0f); // Exemple de valeurs, à ajuster selon votre grille
+        InitializeArrows(3, ScaleManager.Instance.GetTileSpacing()); // Exemple de valeurs, à ajuster selon votre grille
     }
 
     public void InitializeArrows(int gridSize, float spacing)
@@ -40,9 +40,13 @@ public class ArrowManager : MonoBehaviour
         {
             arrows[i] = Instantiate(arrowPrefab, transform);
             arrows[i].SetActive(false); // Désactiver initialement
+            arrows[i].tag = "Arrow";
         }
 
         PositionArrows();
+        // Après avoir instancié et positionné toutes les flèches
+        ScaleManager.Instance.ScaleArrows(ScaleManager.Instance.CalculateScaleFactor(gridSize));
+
     }
 
     private void PositionArrows()
@@ -86,20 +90,6 @@ public class ArrowManager : MonoBehaviour
     {
         yield return new WaitForSeconds(arrowActiveTime);
         arrows[arrowIndex].SetActive(false);
-    }
-
-    public void DeactivateAllArrows()
-    {
-        foreach (GameObject arrow in arrows)
-        {
-            arrow.SetActive(false);
-        }
-    }
-
-
-    public int GetArrowCount()
-    {
-        return arrows != null ? arrows.Length : 0;
     }
 
     // Méthode pour récupérer la position d'une flèche spécifique en fonction de l'index
