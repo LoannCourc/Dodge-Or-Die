@@ -6,20 +6,21 @@ public class SliderManager : MonoBehaviour
 {
     public Slider gridSizeSlider;
     public TextMeshProUGUI gridSizeText;
-    public GameObject sliderPanel; // Référence vers le panel contenant le slider
-    public GameObject panelPause; // Référence vers le panel contenant le slider
+    public TextMeshProUGUI highScoreText; // Ajout pour afficher le high score
+    public GameObject sliderPanel;
+    public GameObject panelPause;
     
     public GridManager gridManager;
     public GameManager gameManager;
 
     private bool _firstTime;
-    
+
     private void Start()
     {
         gridSizeSlider.onValueChanged.AddListener(OnSliderValueChanged);
         OnSliderValueChanged(gridSizeSlider.value);
     }
-    
+
     public void DisableSliderPanel()
     {
         sliderPanel.SetActive(false);
@@ -34,15 +35,22 @@ public class SliderManager : MonoBehaviour
     {
         int gridSize = Mathf.RoundToInt(value);
         gridSizeText.text = gridSize + " x " + gridSize;
+
+        UpdateHighScoreDisplay(gridSize); // Mettre à jour l'affichage du high score
+
         if (_firstTime)
         {
             AudioManager.Instance.PlaySound("SliderSound");
         }
-        // Met à jour la grille et redimensionne les objets en fonction de la taille de la grille
-        gridManager.InitializeGrid(gridSize); // Initialise la grille
-        ScaleManager.Instance.ScaleObjects(gridSize); // Redimensionne les objets en fonction de la taille de la grille
-        // Autres actions à effectuer après avoir initialisé la grille et redimensionné les objets
+        gridManager.InitializeGrid(gridSize);
+        ScaleManager.Instance.ScaleObjects(gridSize);
         gameManager.InitializeGame();
         _firstTime = true;
+    }
+
+    private void UpdateHighScoreDisplay(int gridSize)
+    {
+        int highScore = HighScoreManager.Instance.GetHighScore(gridSize);
+        highScoreText.text = "High Score: " + highScore;
     }
 }

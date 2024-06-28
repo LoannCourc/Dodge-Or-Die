@@ -30,8 +30,7 @@ public class CrashObject : MonoBehaviour
         float offset = (GameManager.Instance.gridManager.GetGridSize() % 2 == 0) ? tileSpacing / 2f : 0f;
         float centeredX = Mathf.Round((position.x - offset) / tileSpacing) * tileSpacing + offset;
         float centeredY = position.y;  // Assume no vertical adjustment needed
-        float centeredZ = Mathf.Round((position.z - offset) / tileSpacing) * tileSpacing + offset;
-        transform.position = new Vector3(centeredX, centeredY, centeredZ);
+        transform.position = new Vector3(centeredX, centeredY, 0);
     }
 
     

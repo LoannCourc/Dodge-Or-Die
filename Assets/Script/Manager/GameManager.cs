@@ -69,6 +69,18 @@ public class GameManager : MonoBehaviour
         NewScore(1);
     }
 
+    public int CalculateFinalScore()
+    {
+        return currentScore;
+    }
+    
+    public void EndGame()
+    {
+        int finalScore = CalculateFinalScore(); // Remplacez ceci par votre logique de score
+        int gridSize = gridManager.GetGridSize();
+        HighScoreManager.Instance.SaveHighScore(gridSize, finalScore);
+    }
+    
     void ChangePlayerPosition()
     {
         float tileSpacing = ScaleManager.Instance.CalculateTileSpacing(currentGridSize);

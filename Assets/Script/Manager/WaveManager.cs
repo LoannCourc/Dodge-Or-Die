@@ -147,44 +147,46 @@ public class WaveManager : MonoBehaviour
         AudioManager.Instance.PlaySound("BulletLauncher");
     }
 
-    public IEnumerator SpawnCrash()
+  public IEnumerator SpawnCrash()
+{
+    SpawnData spawnData = csvReader.GetSpawnData(currentScore, gridSize);
+    Vector3 spawnPosition = player.transform.position;
+
+    GameObject indicator = Instantiate(spawnIndicator, spawnPosition, Quaternion.identity);
+    indicator.transform.localPosition = new Vector3(indicator.transform.localPosition.x, indicator.transform.localPosition.y, 0); // Forcer Z à 0
+
+    float tileSpacing = ScaleManager.Instance.GetTileSpacing();
+    float offset = (gridSize % 2 == 0) ? tileSpacing / 2f : 0f;
+    float centeredX = Mathf.Round((indicator.transform.position.x - offset) / tileSpacing) * tileSpacing + offset;
+    float centeredY = indicator.transform.position.y;
+
+    indicator.transform.position = new Vector3(centeredX, centeredY, 0); // Réinitialiser Z à 0 après ajustement
+
+    float animationDuration = spawnData.crashSpeed / 3f;
+    Sequence indicatorSequence = DOTween.Sequence();
+    indicatorSequence.Append(indicator.transform.DOScale(indicator.transform.localScale * 1.5f, animationDuration).SetEase(Ease.InOutQuad));
+    indicatorSequence.Append(indicator.transform.DOScale(indicator.transform.localScale, animationDuration).SetEase(Ease.InOutQuad));
+
+    yield return indicatorSequence.WaitForCompletion();
+
+    float randomRotationZ = Random.Range(0f, 360f);
+    GameObject crashObject = Instantiate(crashPrefab, new Vector3(centeredX, centeredY, 0), Quaternion.Euler(0, 0, randomRotationZ));
+
+    AudioManager.Instance.PlaySound("CrashSound");
+    crashObject.GetComponent<CrashObject>().CenterOnTile(tileSpacing);
+    crashObject.GetComponent<CrashObject>().SetSpeed(spawnData.crashSpeed);
+    Destroy(indicator);
+
+    crashObject.transform.DOShakePosition(0.4f, new Vector3(0.1f, 0.1f, 0), 50, 90, false, true);
+
+    if (crashParticles != null)
     {
-        SpawnData spawnData = csvReader.GetSpawnData(currentScore, gridSize);
-        GameObject indicator = Instantiate(spawnIndicator, player.transform.position, Quaternion.identity);
-
-        Vector3 position = indicator.transform.position;
-        float tileSpacing = ScaleManager.Instance.GetTileSpacing();
-        float offset = (gridSize % 2 == 0) ? tileSpacing / 2f : 0f;
-        float centeredX = Mathf.Round((position.x - offset) / tileSpacing) * tileSpacing + offset;
-        float centeredY = position.y;
-        float centeredZ = Mathf.Round((position.z - offset) / tileSpacing) * tileSpacing + offset;
-
-        indicator.transform.position = new Vector3(centeredX, centeredY, centeredZ);
-
-        float animationDuration = spawnData.crashSpeed / 3f;
-        Sequence indicatorSequence = DOTween.Sequence();
-        indicatorSequence.Append(indicator.transform.DOScale(indicator.transform.localScale * 1.5f, animationDuration).SetEase(Ease.InOutQuad));
-        indicatorSequence.Append(indicator.transform.DOScale(indicator.transform.localScale, animationDuration).SetEase(Ease.InOutQuad));
-
-        yield return indicatorSequence.WaitForCompletion();
-
-        GameObject crashObject = Instantiate(crashPrefab, indicator.transform.position, Quaternion.identity);
-
-        AudioManager.Instance.PlaySound("CrashSound");
-        crashObject.GetComponent<CrashObject>().CenterOnTile(tileSpacing);
-        crashObject.GetComponent<CrashObject>().SetSpeed(spawnData.crashSpeed);
-        Destroy(indicator);
-
-        crashObject.transform.DOShakePosition(0.4f, new Vector3(0.1f, 0.1f, 0.1f), 50, 90, false, true);
-
-        if (crashParticles != null)
-        {
-            ParticleSystem particles = Instantiate(crashParticles, crashObject.transform.position, Quaternion.identity);
-            particles.Play();
-            Destroy(particles.gameObject, particles.main.duration);
-        }
+        ParticleSystem particles = Instantiate(crashParticles, new Vector3(centeredX, centeredY, 0), Quaternion.identity);
+        particles.Play();
+        Destroy(particles.gameObject, particles.main.duration);
     }
-
+}
+  
     public void SpawnDash()
     {
         int currentGridSize = gridManager.GetGridSize();

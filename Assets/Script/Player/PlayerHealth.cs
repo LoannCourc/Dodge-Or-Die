@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -13,6 +14,9 @@ public class PlayerHealth : MonoBehaviour
     [Header("Damage Effects")]
     public ParticleSystem damageParticles; 
     
+    public float durationHearthEffect;
+    public float scaleHearthEffect;
+    
     private Camera _mainCamera;
     private int _currentHealth;
 
@@ -20,17 +24,31 @@ public class PlayerHealth : MonoBehaviour
     {
         _currentHealth = maxHealth;
         _mainCamera = Camera.main;
+        InitializeHeartAnimations();
+    }
+
+    private void InitializeHeartAnimations()
+    {
+        foreach (GameObject heart in hearths)
+        {
+            // Appliquer une animation de yoyo qui modifie le scale en Y
+            heart.transform.DOScaleY(scaleHearthEffect, durationHearthEffect) // Modifiez les valeurs selon l'effet désiré
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine);
+        }
     }
 
     public void TakeDamage(int damage)
     {
         _currentHealth -= damage;
-        hearths[_currentHealth].SetActive(false);
+        if (_currentHealth < hearths.Count)
+        {
+            hearths[_currentHealth].SetActive(false);
+        }
         
-        // Ajouter l'effet de tremblement de la caméra
         if (_mainCamera != null)
         {
-            _mainCamera.transform.DOShakePosition(0.5f, 0.2f, 20, 90, false, true);
+            _mainCamera.transform.DOShakePosition(0.5f, 0.5f, 20, 90, false, true);
         }
         if (damageParticles != null)
         {
@@ -38,42 +56,33 @@ public class PlayerHealth : MonoBehaviour
             Destroy(particles.gameObject, particles.main.duration);
         }
         
-        // Vérifier si le joueur est mort
         if (_currentHealth <= 0)
         {
-            Die();
+            StartCoroutine(Die());
         }
     }
+
     private void OnTriggerEnter(Collider other)
     {
-        // Vérifiez si le collider appartient à un objet avec lequel le joueur doit interagir
-        if (other != null) // Assurez-vous que vos objets ont le tag "Obstacle"
+        if (other != null)
         {
-            // Récupérer les dégâts depuis l'objet s'il y a un script approprié
-            int damage = other.gameObject.GetComponent<ObjectBase>().damage; // Exemple de dégâts par défaut
-
-            // Appliquer des dégâts au joueur
+            int damage = other.gameObject.GetComponent<ObjectBase>().damage;
             TakeDamage(damage);
             AudioManager.Instance.PlaySound("HitSound");
-            
             other.gameObject.SetActive(false);
         }
     }
-    private void Die()
+
+    private IEnumerator Die()
     {
-        AudioManager.Instance.StopSound("MainMusic");
         AudioManager.Instance.PlaySound("PlayerDeath");
-        // Logique de mort du joueur
+        AudioManager.Instance.StopSound("MainMusic");
+        GameManager.Instance.EndGame();
         deathPanel.SetActive(true);
         panelPause.SetActive(false);
         gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("Time off");
         Time.timeScale = 0f;
-        // Ici, vous pouvez ajouter d'autres actions comme la réinitialisation du jeu, l'affichage d'un écran de fin, etc.
-    }
-
-    // Méthode pour restaurer la santé du joueur (par exemple, pour les soins)
-    public void Heal(int amount)
-    {
-        _currentHealth = Mathf.Min(_currentHealth + amount, maxHealth);
     }
 }
