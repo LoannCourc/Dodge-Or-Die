@@ -67,10 +67,10 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 95ee55f1efeaca14da75202209e9de77, type: 3}
     loop: 0
     isMusic: 0
-    volume: 1
+    volume: 3
     source: {fileID: 0}
   - name: CrashSound
-    clip: {fileID: 8300000, guid: 5d3c435bb46863f41849ac9adcf350e4, type: 3}
+    clip: {fileID: 8300000, guid: 76c0001b48e2b6445a19f38a19b99fe8, type: 3}
     loop: 0
     isMusic: 0
     volume: 1
@@ -85,19 +85,19 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 53100c161e093d14381f7486d97d1263, type: 3}
     loop: 0
     isMusic: 0
-    volume: 1
+    volume: 0.5
     source: {fileID: 0}
   - name: PlayerDashSound02
     clip: {fileID: 8300000, guid: 54ff34002c1813a4a907417b9f7af288, type: 3}
     loop: 0
     isMusic: 0
-    volume: 1
+    volume: 0.5
     source: {fileID: 0}
   - name: PlayerDashSound03
     clip: {fileID: 8300000, guid: a87fddbe37bdc1f4980e384403430acb, type: 3}
     loop: 0
     isMusic: 0
-    volume: 1
+    volume: 0.5
     source: {fileID: 0}
   - name: PlayerDeath
     clip: {fileID: 8300000, guid: 546df8084ed8877439848997683356e3, type: 3}
@@ -109,14 +109,15 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 4547d89955ed7914c933a610483bd834, type: 3}
     loop: 0
     isMusic: 0
-    volume: 1
+    volume: 2
     source: {fileID: 0}
   - name: HitSound
-    clip: {fileID: 8300000, guid: 76c0001b48e2b6445a19f38a19b99fe8, type: 3}
+    clip: {fileID: 8300000, guid: 5d3c435bb46863f41849ac9adcf350e4, type: 3}
     loop: 0
     isMusic: 0
-    volume: 1
+    volume: 2
     source: {fileID: 0}
   fadeDuration: 1
   audioMixer: {fileID: 24100000, guid: af06201e79f38a94f86bea6986b4c6ef, type: 2}
   musicVolumeParameter: MusicVolume
+  sfxVolumeParameter: SFXVolume
