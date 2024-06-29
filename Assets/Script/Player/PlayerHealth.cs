@@ -10,13 +10,13 @@ public class PlayerHealth : MonoBehaviour
 
     public GameObject deathPanel;
     public GameObject panelPause;
-    
+
     [Header("Damage Effects")]
-    public ParticleSystem damageParticles; 
-    
+    public ParticleSystem damageParticles;
+
     public float durationHearthEffect;
     public float scaleHearthEffect;
-    
+
     private Camera _mainCamera;
     private int _currentHealth;
 
@@ -25,40 +25,24 @@ public class PlayerHealth : MonoBehaviour
         _currentHealth = maxHealth;
         _mainCamera = Camera.main;
         InitializeHeartAnimations();
+        UpdateHeartsDisplay();
     }
 
     private void InitializeHeartAnimations()
     {
         foreach (GameObject heart in hearths)
         {
-            // Appliquer une animation de yoyo qui modifie le scale en Y
-            heart.transform.DOScaleY(scaleHearthEffect, durationHearthEffect) // Modifiez les valeurs selon l'effet désiré
+            heart.transform.DOScaleY(scaleHearthEffect, durationHearthEffect)
                 .SetLoops(-1, LoopType.Yoyo)
                 .SetEase(Ease.InOutSine);
         }
     }
 
-    public void TakeDamage(int damage)
+    private void UpdateHeartsDisplay()
     {
-        _currentHealth -= damage;
-        if (_currentHealth < hearths.Count)
+        for (int i = 0; i < hearths.Count; i++)
         {
-            hearths[_currentHealth].SetActive(false);
-        }
-        
-        if (_mainCamera != null)
-        {
-            _mainCamera.transform.DOShakePosition(0.5f, 0.5f, 20, 90, false, true);
-        }
-        if (damageParticles != null)
-        {
-            ParticleSystem particles = Instantiate(damageParticles, transform.position, Quaternion.identity, transform);
-            Destroy(particles.gameObject, particles.main.duration);
-        }
-        
-        if (_currentHealth <= 0)
-        {
-            StartCoroutine(Die());
+            hearths[i].SetActive(i < _currentHealth);
         }
     }
 
@@ -72,6 +56,32 @@ public class PlayerHealth : MonoBehaviour
             other.gameObject.SetActive(false);
         }
     }
+    
+    public void TakeDamage(int damage)
+    {
+        _currentHealth -= damage;
+        _currentHealth = Mathf.Max(0, _currentHealth); // Assure that health does not go below zero
+        UpdateHeartsDisplay();
+
+        if (_mainCamera != null)
+        {
+            _mainCamera.transform.DOShakePosition(0.5f, 0.5f, 20, 90, false, true);
+        }
+        if (damageParticles != null)
+        {
+            ParticleSystem particles = Instantiate(damageParticles, transform.position, Quaternion.identity, transform);
+            Destroy(particles.gameObject, particles.main.duration);
+        }
+
+        if (_currentHealth <= 0)
+        {
+            StartCoroutine(Die());
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound("HitSound");
+        }
+    }
 
     private IEnumerator Die()
     {
@@ -82,7 +92,13 @@ public class PlayerHealth : MonoBehaviour
         panelPause.SetActive(false);
         gameObject.SetActive(false);
         yield return new WaitForSeconds(0.5f);
-        Debug.Log("Time off");
         Time.timeScale = 0f;
+    }
+
+    public void Heal(int amount)
+    {
+        _currentHealth += amount;
+        _currentHealth = Mathf.Min(_currentHealth, maxHealth); // Assure that health does not exceed maximum
+        UpdateHeartsDisplay();
     }
 }

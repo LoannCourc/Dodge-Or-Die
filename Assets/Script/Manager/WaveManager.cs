@@ -22,7 +22,8 @@ public class WaveManager : MonoBehaviour
     private int currentScore = 0;
     private float currentCooldown = 0f;
     private float cooldownDuration = 0f;
-
+    private List<GameObject> _objects = new List<GameObject>();
+    
     void Start()
     {
         if (csvReader == null)
@@ -209,4 +210,13 @@ public class WaveManager : MonoBehaviour
         instantiatedObject.GetComponent<DashObject>().SetSpeed(spawnData.dashSpeed);
     }
 
+    public void ResetWaveManager()
+    {
+        currentScore = 0;  // Réinitialise le score actuel à 0 ou à une valeur initiale appropriée
+        currentCooldown = 0f;  // Réinitialise le cooldown actuel
+        UpdateCooldownDuration();  // Recalcule la durée du cooldown basée sur le score actuel et la taille de la grille
+
+        // Réinitialiser tous les états spécifiques nécessaires ici
+    }
+    
 }

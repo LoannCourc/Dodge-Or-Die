@@ -8,14 +8,16 @@ public class ButtonManager : MonoBehaviour
     public void Restart()
     {
         AudioManager.Instance.PlaySound("ClickSound");
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.name);
+        GameManager.Instance.RestartGame();
+        gameObject.SetActive(false);
         Time.timeScale = 1f;
     }
 
     public void Menu()
     {
         AudioManager.Instance.PlaySound("ClickSound");
-        Application.Quit();
+        Scene scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(scene.name);
+        Time.timeScale = 1f;
     }
 }

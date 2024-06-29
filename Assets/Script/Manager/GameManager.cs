@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public SpawnManager spawnManager;
     public WaveManager waveManager;
     public GameObject player;
+    
+    public GameObject canvasHeal;
     private int currentGridSize;
     private int currentScore;
     private Vector3 centerPos;
@@ -56,6 +58,58 @@ public class GameManager : MonoBehaviour
         spawnManager.InitializeSpawnPoints(currentGridSize, tileSpacing);
     }
 
+    public void RestartGame()
+    {
+        // Réinitialiser le score ou tout autre état de jeu nécessaire
+        currentScore = 0;
+
+        ScoreManager.Instance.ResetScore();
+        
+        // Réinitialiser et préparer la grille et les autres composants pour un nouveau jeu
+        float tileSpacing = ScaleManager.Instance.CalculateTileSpacing(currentGridSize);
+        gridManager.InitializeGrid(currentGridSize);
+        arrowManager.InitializeArrows(currentGridSize, tileSpacing);
+        spawnManager.InitializeSpawnPoints(currentGridSize, tileSpacing);
+        waveManager.ResetWaveManager(); // Vous devrez ajouter cette méthode dans WaveManager pour réinitialiser son état
+
+        player.GetComponent<PlayerHealth>().Heal(3);
+        
+        canvasHeal.SetActive(true);
+        
+        // Reactiver le joueur et le positionner
+        player.SetActive(true);
+        ChangePlayerPosition();
+       
+        // Supprime tous les objets instanciés liés au gameplay
+        DestroySpawnedObjects();
+        
+        waveManager.ResetWaveManager();
+
+        // Redémarrer le jeu
+        InitializeGame();
+        
+        // Démarrer le jeu avec le score de départ si nécessaire
+        NewScore(1);
+
+        // Assurez-vous que le jeu n'est pas en pause
+        Time.timeScale = 1f;
+
+        // Jouer la musique de jeu principale, si elle était arrêtée ou changée
+        AudioManager.Instance.PlaySound("MainMusic");
+    }
+    
+    private void DestroySpawnedObjects()
+    {
+        // Trouver et détruire tous les objets avec un certain tag ou ceux créés dynamiquement
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Obstacle");
+        foreach (GameObject enemy in enemies)
+        {
+            Destroy(enemy);
+        }
+        
+        // Assurez-vous de nettoyer tous les autres types d'objets que vous avez peut-être instanciés
+    }
+    
     public void NewScore(int score)
     {
         currentScore = score;
