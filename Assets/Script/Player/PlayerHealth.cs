@@ -65,7 +65,9 @@ public class PlayerHealth : MonoBehaviour
 
         if (_mainCamera != null)
         {
-            _mainCamera.transform.DOShakePosition(0.5f, 0.5f, 20, 90, false, true);
+            Vector3 originalPosition = _mainCamera.transform.position; // Sauvegarder la position originale
+            _mainCamera.transform.DOShakePosition(0.5f, 0.5f, 20, 90, false, true)
+                .OnComplete(() => _mainCamera.transform.position = originalPosition); // Réinitialiser la position après le shake
         }
         if (damageParticles != null)
         {

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     
     public GameObject canvasHeal;
-    private int currentGridSize;
+    public int currentGridSize;
     private int currentScore;
     private Vector3 centerPos;
     private static GameManager instance;
@@ -138,6 +138,13 @@ public class GameManager : MonoBehaviour
     void ChangePlayerPosition()
     {
         float tileSpacing = ScaleManager.Instance.CalculateTileSpacing(currentGridSize);
+        float gridSizeHalf = (currentGridSize - 1) / 2.0f;
+
+        // Calculer la position du joueur pour qu'il soit au centre de la grille
+        centerPos = new Vector3((gridSizeHalf - Mathf.Floor(gridSizeHalf)) * tileSpacing, 
+            (gridSizeHalf - Mathf.Floor(gridSizeHalf)) * tileSpacing, 
+            0);
+        
         if (currentGridSize == 4)
         {
             int randomPos = Random.Range(0, 4);
@@ -156,7 +163,8 @@ public class GameManager : MonoBehaviour
                     centerPos = new Vector3(tileSpacing / 2f, -tileSpacing / 2f, 0);
                     break;
             }
-            player.transform.position = centerPos;
         }
+        // Appliquer la position calculée
+        player.transform.position = centerPos;
     }
 }

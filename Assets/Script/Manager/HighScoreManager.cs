@@ -1,7 +1,10 @@
+using TMPro;
 using UnityEngine;
 
 public class HighScoreManager : MonoBehaviour
 {
+    public TextMeshProUGUI scoreText;
+    
     public static HighScoreManager Instance;
 
     private void Awake()
@@ -29,6 +32,24 @@ public class HighScoreManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("HighScore_" + gridSize, score);
             PlayerPrefs.Save();
+            DisplayEndGameMessage(true, score);
+        }
+        else
+        {
+            DisplayEndGameMessage(false, score);
+        }
+    }
+
+    // Nouvelle fonction pour afficher un message de fin de jeu
+    public void DisplayEndGameMessage(bool isNewHighScore, int score)
+    {
+        if (isNewHighScore)
+        {
+            scoreText.text = "New Highscore: " + score;
+        }
+        else
+        {
+            scoreText.text = "Your Score: " + score + ". Highscore: " + GetHighScore(GameManager.Instance.currentGridSize);
         }
     }
 }
